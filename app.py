@@ -13,6 +13,7 @@ from controllers.crop_controllers import recommend_crop
 from controllers.weather_controller import get_weather
 from controllers.user_controllers import register, login, get_user_data, update_user_data, update_password
 from controllers.model_controller import classify_image
+from controllers.generate_image_controller import generate_product_image
 
 # import the database models
 from models.chatHistory import create_history_table
@@ -107,6 +108,11 @@ def get_uploaded_file(filename, folder):
 @app.route('/classify', methods=['POST'])
 @auth_token
 def classify_api(email): return classify_image()
+
+
+@app.route('/generate-product-image', methods=['POST'])
+@auth_token
+def generate_product_image_api(email): return generate_product_image()
 
 
 @app.route('/add-product', methods=['POST'])
