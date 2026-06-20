@@ -69,10 +69,6 @@ plant_images = {
         "https://images.pexels.com/photos/255469/pexels-photo-255469.jpeg?w=400",
         "https://images.pexels.com/photos/1667071/pexels-photo-1667071.jpeg?w=400"
     ),
-    "Bean": (
-        "https://images.pexels.com/photos/6316282/pexels-photo-6316282.jpeg?w=400",
-        "https://images.pexels.com/photos/4033636/pexels-photo-4033636.jpeg?w=400"
-    ),
     "Sunflower": (
         "https://images.pexels.com/photos/46216/sunflower-flowers-bright-yellow-46216.jpeg?w=400",
         "https://images.pexels.com/photos/33044/sunflower-sun-summer-yellow.jpg?w=400"

@@ -68,6 +68,18 @@ def insert_plants_data_from_json(filename):
                            (plant_name, plant_short_description, plant_medium_description, plant_long_description, minimum_degrees, state_of_temperature, number_of_water, plant_care_instruct, plant_image1, plant_image2))
             print(f"Plant '{plant_name}' inserted successfully")
 
+    # Keep the DB in sync with the seed file: remove any plant that is no
+    # longer present in data.json (e.g. a plant that was intentionally deleted).
+    json_names = [p.get('plantName', '') for p in plants_data]
+    if json_names:
+        placeholders = ','.join('?' for _ in json_names)
+        cursor.execute(
+            f"DELETE FROM plants WHERE plantName NOT IN ({placeholders})",
+            json_names,
+        )
+        if cursor.rowcount:
+            print(f"Removed {cursor.rowcount} plant(s) not in seed file")
+
     conn.commit()
     conn.close()
 
