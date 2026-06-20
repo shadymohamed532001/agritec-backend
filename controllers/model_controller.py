@@ -2,24 +2,18 @@ from flask import request, jsonify
 from helpers.class_names import class_names
 from helpers.is_plant import is_plant
 from helpers.upload_images import upload_file
+from helpers.disease_info import get_disease_information
 from werkzeug.utils import secure_filename
 import tensorflow as tf
 import numpy as np
 
 from models.products import get_products_by_tag
-from models.user import create_connection
 
 
 def get_plants_by_name(final_class):
-    conn = create_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM plants WHERE plantName LIKE ?",
-                   ('%' + final_class.split(" ")[0] + '%',))
-    data = cursor.fetchone()
-    information = None
-    if data:
-        information = data[3]
-    return information
+    '''Return the bilingual (EN + AR) description and recommended treatment
+    for the predicted disease/plant class.'''
+    return get_disease_information(final_class)
 
 
 def model_data(filename):
@@ -38,14 +32,18 @@ def model_data(filename):
 
 
 def get_products(final_class):
-    tags_list = final_class.split(" ")
-    all_products = []
-    for tag in tags_list:
-        products = get_products_by_tag(tag)
-        if products is not None:
-            if products not in all_products:
-                all_products.append(products)
-    return all_products
+    '''Return a flat, de-duplicated list of treatment products whose tags
+    contain the exact predicted class name.'''
+    products = get_products_by_tag(final_class)
+    if not products:
+        return []
+    seen = set()
+    unique = []
+    for p in products:
+        if p["id"] not in seen:
+            seen.add(p["id"])
+            unique.append(p)
+    return unique
 
 
 def classify_image():
